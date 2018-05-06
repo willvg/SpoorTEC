@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">SporTec</string>
+    <string name="not_fire_auth">No se autentifico con Firebase</string>
+    <string name="not_init_sign">No se inicio secion</string>
+</resources>
