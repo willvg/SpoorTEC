@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SelectSportActivity"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/tv_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/description_selected"
+        android:textSize="25dp"/>
+
+    <CheckBox
+        android:id="@+id/cb_futbol"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Futbol"
+        android:textSize="20dp"
+        android:layout_marginTop="20dp"/>
+
+    <CheckBox
+        android:id="@+id/cb_basketbol"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Basketbol"
+        android:textSize="20dp"/>
+
+    <CheckBox
+        android:id="@+id/cb_beisbol"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Beisbol"
+        android:textSize="20dp"/>
+
+    <CheckBox
+        android:id="@+id/cb_tenis"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tenis"
+        android:textSize="20dp"/>
+
+    <CheckBox
+        android:id="@+id/cb_volleybol"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Volleybol"
+        android:textSize="20dp"/>
+
+    <Button
+        android:id="@+id/bt_next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="150dp"
+        android:text="Continuar"/>
+
+
+</LinearLayout>

@@ -1,9 +1,14 @@
 package willvarela.sportec;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -23,6 +28,18 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleApiClient mGoogleApiClient;
@@ -39,6 +56,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        final Context context = this;
+
 
         mSignInButton = (SignInButton) findViewById(R.id.bt_login_Gmail);
         GoogleSignInOptions mGoogleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -66,14 +86,65 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    Intent intent = new Intent(LoginActivity.this,MainActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
+                    readData();
                 }
             }
         };
 
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+    }
+
+    private void readData() {
+        String linea;
+
+        String[] archivos = fileList();
+
+        if (existe(archivos, "deportes.txt")) {
+            try {
+                InputStreamReader archivo = new InputStreamReader(
+                        openFileInput("deportes.txt"));
+                BufferedReader br = new BufferedReader(archivo);
+                linea = br.readLine();
+                String todo = "";
+                while (linea != null) {
+                    Toast.makeText(this, linea, Toast.LENGTH_LONG).show();
+                    todo = todo + linea + "\n";
+                    linea = br.readLine();
+
+                }
+
+                br.close();
+
+                archivo.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            File file = new File(getFilesDir(), "deportes.txt");
+            file.delete();
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }else{
+            try {
+                OutputStreamWriter archivo = new OutputStreamWriter(openFileOutput(
+                        "deportes.txt", Context.MODE_PRIVATE));
+                //archivo.write("Deportes");
+                archivo.flush();
+                archivo.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Intent intent = new Intent(LoginActivity.this,SelectSportActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+    }
+
+    private boolean existe(String[] archivos, String archbusca) {
+        for (int f = 0; f < archivos.length; f++)
+            if (archbusca.equals(archivos[f]))
+                return true;
+        return false;
     }
 
     @Override
