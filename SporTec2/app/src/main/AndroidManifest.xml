@@ -35,12 +35,13 @@
             android:label="@string/title_activity_menu_spor_tec"
             android:theme="@style/AppTheme.NoActionBar" />
 
-
         <activity
             android:name=".RegistrarActivity"
-            android:label="Registrar">
+            android:label="Registrar"></activity>
 
-        </activity>
+        <activity
+            android:name=".NoticiaActivity"
+            android:label="Noticia"></activity>
     </application>
 
 </manifest>

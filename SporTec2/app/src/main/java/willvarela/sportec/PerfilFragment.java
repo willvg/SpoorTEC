@@ -124,6 +124,8 @@ public class PerfilFragment extends Fragment {
             public void onClick(View v) {
                 guardarNombre();
                 guadarDeportes();
+                Toast.makeText(getActivity(), "Los datos fueron guardados con exito", Toast.LENGTH_LONG).show();
+
             }
         });
 
@@ -156,6 +158,7 @@ public class PerfilFragment extends Fragment {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     private void guardarNombre() {

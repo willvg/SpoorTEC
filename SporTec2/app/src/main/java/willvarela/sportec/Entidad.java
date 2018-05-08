@@ -1,13 +1,17 @@
 package willvarela.sportec;
 
-public class Entidad {
+import java.io.Serializable;
 
-    private String image, descripcion, fecha;
+public class Entidad implements Serializable{
 
-    public Entidad(String image, String descripcion, String fecha) {
+    private String image, descripcion, fecha, tipo, titulo;
+
+    public Entidad(String image, String descripcion, String fecha, String tipo , String titulo) {
         this.image = image;
         this.descripcion = descripcion;
         this.fecha = fecha;
+        this.tipo = tipo;
+        this.titulo = titulo;
     }
 
     public String getImage() {
@@ -32,5 +36,21 @@ public class Entidad {
 
     public void setFecha(String fecha) {
         this.fecha = fecha;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
     }
 }

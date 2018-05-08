@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -41,7 +42,10 @@ public class NoticiasFragment extends Fragment {
     private int CAMERA_REQUEST_CODE = 0;
     private StorageReference mStorage;
     private DatabaseReference mDatabase;
-    final ArrayList<Entidad> arrayList = new ArrayList<Entidad>();
+    ArrayList<Entidad> arrayList;
+    boolean fut = false , bas = false ,beis = false ,tenis = false ,voley = false ;
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,8 +60,16 @@ public class NoticiasFragment extends Fragment {
 
         readData();
 
-        adapterItems = new AdapterItems(getActivity().getApplicationContext(), arrayList);
-        mLvItems.setAdapter(adapterItems);
+
+        mLvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getActivity(), NoticiaActivity.class);
+                intent.putExtra("objeto",arrayList.get(position));
+                startActivity(intent);
+            }
+        });
+
 
         return view;
     }
@@ -75,101 +87,19 @@ public class NoticiasFragment extends Fragment {
                 linea = br.readLine();
                 while (linea != null) {
                     if (linea.equals("Futbol")){
-                        mDatabase = FirebaseDatabase.getInstance().getReference().child("futbol").child("1");
-                        mDatabase.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                String descripcion = String.valueOf(dataSnapshot.child("descripcion").getValue());
-                                String fecha = String.valueOf(dataSnapshot.child("fecha").getValue());
-                                String imageUrl = String.valueOf(dataSnapshot.child("imagen").getValue());
-                                Log.e("descripcion:", descripcion);
-                                Log.e("fecha:", fecha);
-                                arrayList.add(new Entidad(imageUrl, descripcion, fecha));
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
+                        fut = true;
                     }
                     else if (linea.equals("Basketbol")){
-                        mDatabase = FirebaseDatabase.getInstance().getReference().child("basket").child("1");
-                        mDatabase.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                String descripcion = String.valueOf(dataSnapshot.child("descripcion").getValue());
-                                String fecha = String.valueOf(dataSnapshot.child("fecha").getValue());
-                                String imageUrl = String.valueOf(dataSnapshot.child("imagen").getValue());
-                                Log.e("descripcion:", descripcion);
-                                Log.e("fecha:", fecha);
-                                arrayList.add(new Entidad(imageUrl, descripcion, fecha));
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
+                        bas = true;
                     }
                     else if (linea.equals("Beisbol")){
-                        mDatabase = FirebaseDatabase.getInstance().getReference().child("beisbol").child("1");
-                        mDatabase.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                String descripcion = String.valueOf(dataSnapshot.child("descripcion").getValue());
-                                String fecha = String.valueOf(dataSnapshot.child("fecha").getValue());
-                                String imageUrl = String.valueOf(dataSnapshot.child("imagen").getValue());
-                                Log.e("descripcion:", descripcion);
-                                Log.e("fecha:", fecha);
-                                arrayList.add(new Entidad(imageUrl, descripcion, fecha));
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
+                        beis = true;
                     }
                     else if (linea.equals("Tenis")){
-                        mDatabase = FirebaseDatabase.getInstance().getReference().child("tenis").child("1");
-                        mDatabase.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                String descripcion = String.valueOf(dataSnapshot.child("descripcion").getValue());
-                                String fecha = String.valueOf(dataSnapshot.child("fecha").getValue());
-                                String imageUrl = String.valueOf(dataSnapshot.child("imagen").getValue());
-                                Log.e("descripcion:", descripcion);
-                                Log.e("fecha:", fecha);
-                                arrayList.add(new Entidad(imageUrl, descripcion, fecha));
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
-
+                        tenis = true;
                     }
                     else if (linea.equals("Voleybol")){
-                        mDatabase = FirebaseDatabase.getInstance().getReference().child("voleybol").child("1");
-                        mDatabase.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                String descripcion = String.valueOf(dataSnapshot.child("descripcion").getValue());
-                                String fecha = String.valueOf(dataSnapshot.child("fecha").getValue());
-                                String imageUrl = String.valueOf(dataSnapshot.child("imagen").getValue());
-                                Log.e("descripcion:", descripcion);
-                                Log.e("fecha:", fecha);
-                                arrayList.add(new Entidad(imageUrl, descripcion, fecha));
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
-
+                        voley = true;
                     }
                     linea = br.readLine();
                 }
@@ -179,6 +109,60 @@ public class NoticiasFragment extends Fragment {
                 e.printStackTrace();
             }
         }
+        mostrar();
+    }
+
+    private void mostrar(){
+        arrayList = new ArrayList<>();
+        /*Log.e("fut:" , String.valueOf(fut));
+        Log.e("bas:" , String.valueOf(bas));
+        Log.e("beis:" , String.valueOf(beis));
+        Log.e("tenis:" , String.valueOf(tenis));
+        Log.e("voley:" , String.valueOf(voley));*/
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("noticias");
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.e("entra", "**************************");
+                for (DataSnapshot snapshot :
+                        dataSnapshot.getChildren()){
+                    String titulo = snapshot.child("titulo").getValue(String.class);
+                    String descripcion = snapshot.child("descripcion").getValue(String.class);
+                    String fecha = snapshot.child("fecha").getValue(String.class);
+                    String imagen = snapshot.child("imagen").getValue(String.class);
+                    String tipo = snapshot.child("tipo").getValue(String.class);
+                    Entidad entidad = new Entidad(imagen, descripcion, fecha, tipo ,titulo);
+                    /*Log.e("fut:" , String.valueOf(fut));
+                    Log.e("bas:" , String.valueOf(bas));
+                    Log.e("beis:" , String.valueOf(beis));
+                    Log.e("tenis:" , String.valueOf(tenis));
+                    Log.e("voley:" , String.valueOf(voley));*/
+                    if (fut == true && tipo.equals("futbol")){
+                        arrayList.add(entidad);
+                    }
+                    else if (bas == true && tipo.equals("basket")){
+                        arrayList.add(entidad);
+                    }
+                    else if (beis == true && tipo.equals("beis")){
+                        arrayList.add(entidad);
+                    }
+                    else if (tenis == true && tipo.equals("tenis")){
+                        arrayList.add(entidad);
+                    }
+                    else if (voley == true && tipo.equals("voley")){
+                        arrayList.add(entidad);
+                    }
+                }
+
+                adapterItems = new AdapterItems(getActivity().getApplicationContext(), arrayList);
+                mLvItems.setAdapter(adapterItems);
+                adapterItems.notifyDataSetChanged();
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     /*private ArrayList<Entidad> getArrayItems(){
