@@ -1,6 +1,7 @@
 package willvarela.sportec;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,8 +9,11 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -51,6 +55,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     public static final int SIGN_IN_CODE = 777;
 
     private ProgressBar mProgressBar;
+    private Button mBtRegistrar;
+
+    private Button mBtInio;
+    private EditText mEtCorreo, mEtPassword;
+
+    private ProgressDialog mProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +68,22 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         setContentView(R.layout.activity_login);
 
         final Context context = this;
+        mBtRegistrar = (Button) findViewById(R.id.bt_registrar);
+        mBtInio = (Button) findViewById(R.id.bt_inicio_sesion);
+        mEtCorreo = (EditText) findViewById(R.id.et_correo);
+        mEtPassword = (EditText) findViewById(R.id.et_password);
+        mProgress = new ProgressDialog(this);
 
+        mBtRegistrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, RegistrarActivity.class);
+                //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        });
 
+        //login con gmail
         mSignInButton = (SignInButton) findViewById(R.id.bt_login_Gmail);
         GoogleSignInOptions mGoogleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -79,7 +103,15 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             }
         });
 
+
         mFirebaseAuth = FirebaseAuth.getInstance();
+
+        mBtInio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                inicio();
+            }
+        });
         mFirebaseAuthListener = new FirebaseAuth.AuthStateListener() {
             //Este metodo se ejecuta cuando cambia el estado de la utentificaci[on
             @Override
@@ -92,6 +124,32 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         };
 
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+    }
+
+    private void inicio() {
+        String correo = mEtCorreo.getText().toString().trim();
+        String password = mEtPassword.getText().toString().trim();
+
+        if (!TextUtils.isEmpty(correo) && !TextUtils.isEmpty(password)){
+            mProgress.setMessage("Iniciando, un momento");
+            mProgress.show();
+            mFirebaseAuth.signInWithEmailAndPassword(correo,password)
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            mProgress.dismiss();
+                            if (task.isSuccessful()){
+                                //readData();
+                            }
+                            else {
+                                Toast.makeText(getApplicationContext(), "Error no se pudo realizar el inicio", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+        }
+        else{
+            Toast.makeText(getApplicationContext(), "Todos los campos son requeridos", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void readData() {
@@ -121,7 +179,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             }
             File file = new File(getFilesDir(), "deportes.txt");
             file.delete();
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            Intent intent = new Intent(LoginActivity.this, MenuSporTec.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }else{
@@ -179,17 +237,13 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount signInAccount) {
-
-        mProgressBar.setVisibility(View.VISIBLE);
-        mSignInButton.setVisibility(View.GONE);
-
+        mProgress.setMessage("Iniciando, un momento");
+        mProgress.show();
         AuthCredential credential = GoogleAuthProvider.getCredential(signInAccount.getIdToken(), null);
         mFirebaseAuth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-
-                mProgressBar.setVisibility(View.GONE);
-                mSignInButton.setVisibility(View.VISIBLE);
+                mProgress.dismiss();
 
                 if (!task.isSuccessful()) {
                     Toast.makeText(getApplicationContext(), R.string.not_fire_auth, Toast.LENGTH_SHORT).show();

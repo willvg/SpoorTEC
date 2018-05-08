@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_noticias"
+            android:icon="@drawable/ic_action_noticias"
+            android:title="Noticias" />
+        <item
+            android:id="@+id/nav_deportes"
+            android:icon="@drawable/ic_action_deportes"
+            android:title="Deportes" />
+        <item
+            android:id="@+id/nav_resultados"
+            android:icon="@drawable/ic_action_resultados"
+            android:title="Resultados" />
+        <item
+            android:id="@+id/nav_retos"
+            android:icon="@drawable/ic_action_retos"
+            android:title="Retos" />
+    </group>
+
+    <item android:title="Personal">
+        <menu>
+            <item
+                android:id="@+id/nav_perfil"
+                android:icon="@drawable/ic_action_perfil"
+                android:title="Perfil" />
+            <item
+                android:id="@+id/nav_perfil_equipo"
+                android:icon="@drawable/ic_action_perfil_equipo"
+                android:title="Perfil de equipo" />
+            <item
+                android:id="@+id/nav_cerrar_sesion"
+                android:icon="@drawable/ic_action_cerrar"
+                android:title="Cerrar Sesión" >
+                </item>
+        </menu>
+    </item>
+
+</menu>

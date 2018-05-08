@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="willvarela.sportec">
 
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
@@ -12,19 +13,34 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity" />
+        <activity
+            android:name=".LoginActivity"
+            android:label="Inicio de sesion" />
+        <activity
+            android:name=".SelectSportActivity"
+            android:label="@string/selected"
+            android:parentActivityName=".LoginActivity" />
+        <activity
+            android:name=".Splash"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity">
+        <activity
+            android:name=".MenuSporTec"
+            android:label="@string/title_activity_menu_spor_tec"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+
+        <activity
+            android:name=".RegistrarActivity"
+            android:label="Registrar">
 
         </activity>
-        <activity android:name=".SelectSportActivity"
-            android:label="@string/selected"
-            android:parentActivityName=".MainActivity"></activity>
     </application>
 
 </manifest>

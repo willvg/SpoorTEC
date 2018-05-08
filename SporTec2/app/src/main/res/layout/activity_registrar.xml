@@ -4,11 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity"
+    tools:context=".RegistrarActivity"
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/tv_correo"
+        android:id="@+id/tv_nombre_registrar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:text="@string/nombre_y_apellidos"
+        android:textSize="25dp" />
+    <EditText
+        android:id="@+id/et_nombre_registrar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:hint="Nombre y apellidos" />
+
+
+    <TextView
+        android:id="@+id/tv_correo_registrar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
@@ -16,16 +33,16 @@
         android:text="@string/correo_tv"
         android:textSize="25dp" />
     <EditText
-        android:id="@+id/et_correo"
+        android:id="@+id/et_correo_registrar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:layout_marginLeft="5dp"
-        android:hint="Correo"/>
+        android:hint="Correo" />
 
 
     <TextView
-        android:id="@+id/tv_password"
+        android:id="@+id/tv_password_registrar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
@@ -34,51 +51,18 @@
         android:textSize="25dp" />
 
     <EditText
-        android:id="@+id/et_password"
+        android:id="@+id/et_password_registrar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:layout_marginLeft="5dp"
         android:hint="Password"/>
     <Button
-        android:id="@+id/bt_inicio_sesion"
+        android:id="@+id/bt_inicio_sesion_registrar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/inicio"
+        android:text="@string/registrar"
         android:layout_marginTop="15dp"
         android:layout_marginLeft="5dp"/>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp">
-        <Button
-            android:id="@+id/bt_registrar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Registrar cuenta"
-            android:layout_centerHorizontal="true"
-            android:layout_centerInParent="true"/>
-    </RelativeLayout>
-
-
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/bt_login_Gmail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp">
-
-    </com.google.android.gms.common.SignInButton>
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:visibility="gone"
-        />
-
-
 
 </LinearLayout>

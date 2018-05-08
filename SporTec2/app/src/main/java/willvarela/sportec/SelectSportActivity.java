@@ -56,7 +56,7 @@ public class SelectSportActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                Intent intent = new Intent(SelectSportActivity.this,MainActivity.class);
+                Intent intent = new Intent(SelectSportActivity.this,MenuSporTec.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }
