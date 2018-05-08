@@ -2,13 +2,16 @@ package willvarela.sportec;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -34,6 +37,10 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -43,10 +50,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 
 public class MenuSporTec extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -61,12 +71,15 @@ public class MenuSporTec extends AppCompatActivity
     private int CAMERA_REQUEST_CODE = 0;
     private StorageReference mStorage;
     private DatabaseReference mDatabase;
-
+    private String tipo ="";
+    private ProgressDialog mProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_spor_tec);
+        tipo = getIntent().getExtras().getString("tipo");
+        mProgress = new ProgressDialog(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
@@ -110,8 +123,12 @@ public class MenuSporTec extends AppCompatActivity
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    setUserData(user);
-                    setUserData2();
+                    if (tipo.equals("cp")){
+                        setUserData2();
+                    }
+                    else if (tipo.equals("gm")){
+                        setUserData(user);
+                    }
 
                 } else {
                     goLogInScreen();
@@ -166,12 +183,12 @@ public class MenuSporTec extends AppCompatActivity
     }
 
     private void setUserData2(){
-        Glide.with(MenuSporTec.this).load(R.drawable.ic_action_perfil)
+        /*Glide.with(MenuSporTec.this).load(R.drawable.ic_action_perfil)
                 .crossFade()
                 .thumbnail(0.5f)
                 .bitmapTransform(new CircleTransform(this))
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(imagePerfil);
+                .into(imagePerfil);*/
 
         imagePerfil.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -192,14 +209,14 @@ public class MenuSporTec extends AppCompatActivity
             public void onDataChange(DataSnapshot dataSnapshot) {
                 nombre.setText(String.valueOf(dataSnapshot.child("Nombre").getValue()));
                 String imageUrl = String.valueOf(dataSnapshot.child("FotoPerfil").getValue());
-                /*if (URLUtil.isValidUrl(imageUrl))
-                    Glide.with(MenuSporTec.this).load(user.getPhotoUrl())
+                if (URLUtil.isValidUrl(imageUrl))
+                    Glide.with(MenuSporTec.this).load(imageUrl)
                             .crossFade()
                             .thumbnail(0.5f)
-                            .bitmapTransform(new CircleTransform(this))
+                            .bitmapTransform(new CircleTransform(MenuSporTec.this))
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(imagePerfil);
-                    Picasso.with(MenuSporTec.this).load(Uri.parse(imageUrl)).into(imageProfile);*/
+                    //Picasso.with(MenuSporTec.this).load(Uri.parse(imageUrl)).into(imageProfile);
             }
 
             @Override
@@ -318,5 +335,89 @@ public class MenuSporTec extends AppCompatActivity
         return true;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK) {
+            final Uri sourceUri = data.getData();
+            Log.e("foto", sourceUri.toString());
+
+            uploadImage(sourceUri);
+        }
+    }
+
+
+    public void uploadImage(final Uri fileUri) {
+        if (firebaseAuth.getCurrentUser() == null)
+            return;
+
+        if (mStorage == null)
+            mStorage = FirebaseStorage.getInstance().getReference();
+        if (mDatabase == null)
+            mDatabase = FirebaseDatabase.getInstance().getReference().child("users");
+
+        final StorageReference filepath = mStorage.child("Photos").child(getRandomString());/*uri.getLastPathSegment()*/
+        final DatabaseReference currentUserDB = mDatabase.child(firebaseAuth.getCurrentUser().getUid());
+
+        mProgress.setMessage("Cargardo la imagen");
+        mProgress.show();
+
+        currentUserDB.child("FotoPerfil").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String image = dataSnapshot.getValue().toString();
+
+                if (!image.equals("default") && !image.isEmpty()) {
+                    Task<Void> task = FirebaseStorage.getInstance().getReferenceFromUrl(image).delete();
+                    task.addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful())
+                                Toast.makeText(MenuSporTec.this, "Borrado de la imagen exitoso", Toast.LENGTH_SHORT).show();
+                            else
+                                Toast.makeText(MenuSporTec.this, "Borrado de la imagen fallido", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+
+                currentUserDB.child("FotoPerfil").removeEventListener(this);
+
+                filepath.putFile(fileUri).addOnSuccessListener(MenuSporTec.this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        mProgress.dismiss();
+                        Uri downloadUri = taskSnapshot.getDownloadUrl();
+                        Toast.makeText(MenuSporTec.this, "Finalizado", Toast.LENGTH_SHORT).show();
+                        Glide.with(MenuSporTec.this).load(fileUri)
+                                .crossFade()
+                                .thumbnail(0.5f)
+                                .bitmapTransform(new CircleTransform(MenuSporTec.this))
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(imagePerfil);
+                        //Picasso.with(MenuSporTec.this).load(fileUri).fit().centerCrop().into(imageProfile);
+                        DatabaseReference currentUserDB = mDatabase.child(firebaseAuth.getCurrentUser().getUid());
+                        currentUserDB.child("FotoPerfil").setValue(downloadUri.toString());
+                    }
+                }).addOnFailureListener(MenuSporTec.this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        mProgress.dismiss();
+                        Toast.makeText(MenuSporTec.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public String getRandomString() {
+        SecureRandom random = new SecureRandom();
+        return new BigInteger(130, random).toString(32);
+    }
 
 }

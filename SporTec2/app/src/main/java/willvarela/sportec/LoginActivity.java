@@ -62,6 +62,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     private ProgressDialog mProgress;
 
+    private String tipo= "cp";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -181,6 +183,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             file.delete();
             Intent intent = new Intent(LoginActivity.this, MenuSporTec.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra("tipo", tipo);
             startActivity(intent);
         }else{
             try {
@@ -194,6 +197,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             }
             Intent intent = new Intent(LoginActivity.this,SelectSportActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra("tipo", tipo);
             startActivity(intent);
         }
     }
@@ -220,16 +224,17 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode==SIGN_IN_CODE){
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
+            //tipo = "gm";
         }
     }
 
     private void handleSignInResult(GoogleSignInResult result) {
         if (result.isSuccess()){
             firebaseAuthWithGoogle(result.getSignInAccount());
+            tipo = "gm";
         }
         else{
             Toast.makeText(this, R.string.not_init_sign, Toast.LENGTH_SHORT).show();

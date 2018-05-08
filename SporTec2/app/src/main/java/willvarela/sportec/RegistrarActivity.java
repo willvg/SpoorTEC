@@ -66,7 +66,7 @@ public class RegistrarActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             mProgress.dismiss();
                             if (task.isSuccessful()){
-                                DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("user");
+                                DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("users");
                                 DatabaseReference currentUserDB = mDatabase.child(mFirebaseAuth.getCurrentUser().getUid());
                                 currentUserDB.child("Nombre").setValue(nombre);
                                 currentUserDB.child("FotoPerfil").setValue("default");

@@ -17,9 +17,11 @@ public class SelectSportActivity extends AppCompatActivity {
     private Button btSeguir;
     private CheckBox mCbFutbol, mChbasket, mCbTenis, mChBeisbol, mCbVolleybol;
     private String allSport = "";
+    private String tipo = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        tipo = getIntent().getExtras().getString("tipo");
         setContentView(R.layout.activity_select_sport);
         btSeguir = (Button) findViewById(R.id.bt_next);
         mCbFutbol = (CheckBox) findViewById(R.id.cb_futbol);
@@ -58,6 +60,7 @@ public class SelectSportActivity extends AppCompatActivity {
                 }
                 Intent intent = new Intent(SelectSportActivity.this,MenuSporTec.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("tipo", tipo);
                 startActivity(intent);
             }
         });
