@@ -1,8 +1,10 @@
 package willvarela.sportec;
 
+import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -29,6 +31,9 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
@@ -68,6 +73,7 @@ public class MenuSporTec extends AppCompatActivity
     private View hView;
     TextView nombre;
     ImageView imagePerfil;
+    private String nomTem, imageTem, correoTem;
     private int CAMERA_REQUEST_CODE = 0;
     private StorageReference mStorage;
     private DatabaseReference mDatabase;
@@ -128,6 +134,7 @@ public class MenuSporTec extends AppCompatActivity
                     }
                     else if (tipo.equals("gm")){
                         setUserData(user);
+
                     }
 
                 } else {
@@ -149,8 +156,9 @@ public class MenuSporTec extends AppCompatActivity
 
 
         nombre.setText(user.getDisplayName());
-
-
+        nomTem = user.getDisplayName();
+        correoTem = user.getEmail();
+        imageTem = user.getPhotoUrl().toString();
         Glide.with(this).load(user.getPhotoUrl())
                 .crossFade()
                 .thumbnail(0.5f)
@@ -316,17 +324,17 @@ public class MenuSporTec extends AppCompatActivity
         } else if (id == R.id.nav_retos) {
 
         } else if (id == R.id.nav_perfil) {
-
+            if (tipo.equals("gm")){
+                mostrarInfo();
+            }
+            else if(tipo.equals("cp")){
+                fragmentManager.beginTransaction().replace(R.id.contenedor, new PerfilFragment()).commit();
+            }
         } else if (id == R.id.nav_perfil_equipo) {
 
         }
         else if (id == R.id.nav_cerrar_sesion) {
             logOut();
-            //firebaseAuth.signOut();
-            //Intent intent = new Intent(MenuSporTec.this, LoginActivity.class);
-            //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            //startActivity(intent);
-            //fragmentManager.beginTransaction().replace(R.id.contenedor, new CerrarSesionFragment()).commit();
         }
 
 
@@ -420,4 +428,42 @@ public class MenuSporTec extends AppCompatActivity
         return new BigInteger(130, random).toString(32);
     }
 
+    private void mostrarInfo(){
+
+
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                this);
+        
+        
+        //alertDialogBuilder.setIcon(R.drawable.ic_action_perfil);
+        Glide.with(this)
+                .load(imageTem)
+                .into(new SimpleTarget<GlideDrawable>(125, 125) {
+                    @Override
+                    public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
+                        alertDialogBuilder.setIcon(resource);
+                    }
+                });
+        
+        // set title
+        alertDialogBuilder.setTitle(nomTem);
+        
+
+        // set dialog message
+        alertDialogBuilder
+                .setMessage(correoTem)
+                .setCancelable(false)
+                .setPositiveButton("Aceptar",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
+
+    }
 }

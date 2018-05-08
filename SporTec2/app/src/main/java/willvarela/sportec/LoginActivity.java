@@ -179,8 +179,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            File file = new File(getFilesDir(), "deportes.txt");
-            file.delete();
+            //File file = new File(getFilesDir(), "deportes.txt");
+            //file.delete();
             Intent intent = new Intent(LoginActivity.this, MenuSporTec.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra("tipo", tipo);
