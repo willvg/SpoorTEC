@@ -80,6 +80,9 @@ public class MenuSporTec extends AppCompatActivity
     private String tipo ="";
     private ProgressDialog mProgress;
 
+    boolean bandera = false;
+    FirebaseUser user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,14 +130,14 @@ public class MenuSporTec extends AppCompatActivity
         mFirebaseAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
+                user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     if (tipo.equals("cp")){
                         setUserData2();
                     }
                     else if (tipo.equals("gm")){
                         setUserData(user);
-
+                        agregar();
                     }
 
                 } else {
@@ -150,6 +153,46 @@ public class MenuSporTec extends AppCompatActivity
 
 
 
+    }
+
+    private void agregar(){
+        mStorage = FirebaseStorage.getInstance().getReference();
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("users");
+        mDatabase.child(firebaseAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot snapshot :
+                        dataSnapshot.getChildren()){
+                    String nombre  = snapshot.child("Nombre").getValue(String.class);
+
+                    Log.e("2:" , user.getDisplayName());
+                    //Log.e("1:" , nombre);
+
+                    if (nombre != null){
+                        if (nombre.equals(user.getDisplayName())){
+                            bandera = true;
+                        }
+                    }
+                }
+                Log.e("bas:" , String.valueOf(bandera));
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        if (!bandera){
+            mDatabase = FirebaseDatabase.getInstance().getReference().child("users");
+            DatabaseReference currentUserDBTem = mDatabase.child(firebaseAuth.getCurrentUser().getUid());
+            currentUserDBTem.child("Nombre").setValue(user.getDisplayName());
+            currentUserDBTem.child("FotoPerfil").setValue("default");
+
+            Toast.makeText(getApplicationContext(), "Registro con exito", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void setUserData(FirebaseUser user) {
