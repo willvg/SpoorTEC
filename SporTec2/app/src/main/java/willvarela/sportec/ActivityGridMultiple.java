@@ -46,6 +46,11 @@ public class ActivityGridMultiple extends AppCompatActivity {
                     intent.putExtra("objeto",deporte);
                     startActivity(intent);
                 }
+                else if(op.getNombreDeporte().equals("Equipo")){
+                    Intent intent = new Intent(ActivityGridMultiple.this, ActivityEquipo.class);
+                    intent.putExtra("objeto",deporte);
+                    startActivity(intent);
+                }
                 //sigo con las demas
 
             }

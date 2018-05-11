@@ -2,6 +2,7 @@ package willvarela.sportec;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -51,6 +52,7 @@ import com.google.firebase.storage.UploadTask;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 
@@ -209,7 +211,7 @@ public class MenuSporTec extends AppCompatActivity
             linea = br.readLine();
             String todo = "";
             while (linea != null) {
-                Toast.makeText(this, linea, Toast.LENGTH_LONG).show();
+                //Toast.makeText(this, linea, Toast.LENGTH_LONG).show();
                 todo = todo + linea + "\n";
                 linea = br.readLine();
             }
@@ -335,7 +337,7 @@ public class MenuSporTec extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_buscar) {
             return true;
         }
 
@@ -350,21 +352,21 @@ public class MenuSporTec extends AppCompatActivity
 
         fragmentManager = getSupportFragmentManager();
         if (id == R.id.nav_noticias) {
+            writeUser();
             fragmentManager.beginTransaction().replace(R.id.contenedor, new FragmentNoticias()).commit();
-        } else if (id == R.id.nav_deportes) {
-            fragmentManager.beginTransaction().replace(R.id.contenedor, new FragmentsDeportes()).commit();
-        } else if (id == R.id.nav_resultados) {
 
-        } else if (id == R.id.nav_retos) {
+        } else if (id == R.id.nav_deportes) {
+            writeUser();
+            fragmentManager.beginTransaction().replace(R.id.contenedor, new FragmentsDeportes()).commit();
 
         } else if (id == R.id.nav_perfil) {
+            writeUser();
             if (tipo.equals("gm")){
                 mostrarInfo();
             }
             else if(tipo.equals("cp")){
                 fragmentManager.beginTransaction().replace(R.id.contenedor, new FragmentPerfil()).commit();
             }
-        } else if (id == R.id.nav_perfil_equipo) {
 
         }
         else if (id == R.id.nav_cerrar_sesion) {
@@ -498,6 +500,19 @@ public class MenuSporTec extends AppCompatActivity
 
         // show it
         alertDialog.show();
+    }
+
+    private void writeUser() {
+        String linea;
+        try {
+            OutputStreamWriter archivo = new OutputStreamWriter(openFileOutput(
+                    "user.txt", Context.MODE_PRIVATE));
+            archivo.write(String.valueOf(nombre.getText()));
+            archivo.flush();
+            archivo.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 }

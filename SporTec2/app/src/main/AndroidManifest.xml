@@ -42,7 +42,8 @@
             android:label="Noticia" />
         <activity android:name=".ActivityGridMultiple" />
         <activity android:name=".ActivityResultados" />
-        <activity android:name=".ActivityRetos"></activity>
+        <activity android:name=".ActivityRetos" />
+        <activity android:name=".ActivityEquipo"></activity>
     </application>
 
 </manifest>
