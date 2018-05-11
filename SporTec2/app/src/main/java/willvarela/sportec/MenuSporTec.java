@@ -1,18 +1,12 @@
 package willvarela.sportec;
 
 import android.app.AlertDialog;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -24,7 +18,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.URLUtil;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,10 +29,8 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -149,7 +140,7 @@ public class MenuSporTec extends AppCompatActivity
         //Fragment por defecto
         //FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
         fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.contenedor, new NoticiasFragment()).commit();
+        fragmentManager.beginTransaction().replace(R.id.contenedor, new FragmentNoticias()).commit();
 
 
 
@@ -288,7 +279,7 @@ public class MenuSporTec extends AppCompatActivity
 
     //cerrar sesion
     private void goLogInScreen() {
-        Intent intent = new Intent(MenuSporTec.this, LoginActivity.class);
+        Intent intent = new Intent(MenuSporTec.this, ActivityLogin.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
@@ -359,9 +350,9 @@ public class MenuSporTec extends AppCompatActivity
 
         fragmentManager = getSupportFragmentManager();
         if (id == R.id.nav_noticias) {
-            fragmentManager.beginTransaction().replace(R.id.contenedor, new NoticiasFragment()).commit();
+            fragmentManager.beginTransaction().replace(R.id.contenedor, new FragmentNoticias()).commit();
         } else if (id == R.id.nav_deportes) {
-
+            fragmentManager.beginTransaction().replace(R.id.contenedor, new FragmentsDeportes()).commit();
         } else if (id == R.id.nav_resultados) {
 
         } else if (id == R.id.nav_retos) {
@@ -371,7 +362,7 @@ public class MenuSporTec extends AppCompatActivity
                 mostrarInfo();
             }
             else if(tipo.equals("cp")){
-                fragmentManager.beginTransaction().replace(R.id.contenedor, new PerfilFragment()).commit();
+                fragmentManager.beginTransaction().replace(R.id.contenedor, new FragmentPerfil()).commit();
             }
         } else if (id == R.id.nav_perfil_equipo) {
 

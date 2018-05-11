@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -12,7 +11,7 @@ import android.widget.CheckBox;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
-public class SelectSportActivity extends AppCompatActivity {
+public class ActivitySelectSport extends AppCompatActivity {
 
     private Button btSeguir;
     private CheckBox mCbFutbol, mChbasket, mCbTenis, mChBeisbol, mCbVolleybol;
@@ -58,7 +57,7 @@ public class SelectSportActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                Intent intent = new Intent(SelectSportActivity.this,MenuSporTec.class);
+                Intent intent = new Intent(ActivitySelectSport.this,MenuSporTec.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("tipo", tipo);
                 startActivity(intent);

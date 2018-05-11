@@ -47,7 +47,7 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 
 
-public class PerfilFragment extends Fragment {
+public class FragmentPerfil extends Fragment {
     View view;
     private String tipo = "";
     private Button mBtCambiarimagen, mBtGuardar;
@@ -63,7 +63,7 @@ public class PerfilFragment extends Fragment {
     private StorageReference mStorage;
     private DatabaseReference mDatabase;
 
-    public PerfilFragment() {
+    public FragmentPerfil() {
     }
 
     @Override

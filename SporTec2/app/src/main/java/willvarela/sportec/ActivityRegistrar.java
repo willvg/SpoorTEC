@@ -18,7 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class RegistrarActivity extends AppCompatActivity {
+public class ActivityRegistrar extends AppCompatActivity {
 
 
     private FirebaseAuth mFirebaseAuth;
@@ -72,7 +72,7 @@ public class RegistrarActivity extends AppCompatActivity {
                                 currentUserDB.child("FotoPerfil").setValue("default");
 
                                 Toast.makeText(getApplicationContext(), "Registro con exito", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(RegistrarActivity.this, LoginActivity.class);
+                                Intent intent = new Intent(ActivityRegistrar.this, ActivityLogin.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
                             }

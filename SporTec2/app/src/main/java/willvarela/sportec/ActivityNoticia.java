@@ -8,7 +8,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
-public class NoticiaActivity extends AppCompatActivity {
+public class ActivityNoticia extends AppCompatActivity {
 
     private Entidad entidad;
 

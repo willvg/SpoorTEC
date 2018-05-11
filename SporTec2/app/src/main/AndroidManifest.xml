@@ -13,14 +13,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity" />
+        <activity android:name=".ActivityMain" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".ActivityLogin"
             android:label="Inicio de sesion" />
         <activity
-            android:name=".SelectSportActivity"
+            android:name=".ActivitySelectSport"
             android:label="@string/selected"
-            android:parentActivityName=".LoginActivity" />
+            android:parentActivityName=".ActivityLogin" />
         <activity
             android:name=".Splash"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
@@ -34,14 +34,15 @@
             android:name=".MenuSporTec"
             android:label="@string/title_activity_menu_spor_tec"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
-            android:name=".RegistrarActivity"
-            android:label="Registrar"></activity>
-
+            android:name=".ActivityRegistrar"
+            android:label="Registrar" />
         <activity
-            android:name=".NoticiaActivity"
-            android:label="Noticia"></activity>
+            android:name=".ActivityNoticia"
+            android:label="Noticia" />
+        <activity android:name=".ActivityGridMultiple" />
+        <activity android:name=".ActivityResultados" />
+        <activity android:name=".ActivityRetos"></activity>
     </application>
 
 </manifest>
